@@ -1,0 +1,24 @@
+name: Build and test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Check publication contents
+        run: python3 Scripts/check-publication.py
+      - name: Run offline core tests
+        run: ./test.sh
+      - name: Build and verify local app
+        run: ./build.sh
